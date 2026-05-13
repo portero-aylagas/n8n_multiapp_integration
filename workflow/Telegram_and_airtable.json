@@ -1,0 +1,230 @@
+{
+  "name": "Telegram and airtable",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        256
+      ],
+      "id": "625702a0-4920-42c5-8e7b-56ccc5309335",
+      "name": "Telegram Trigger",
+      "webhookId": "1332600d-227a-4c50-b609-a720bbfe9b56",
+      "credentials": {
+        "telegramApi": {
+          "id": "gLjtNlezzOcvmfJA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "https://airtable.com/appXNUjvl2Lw3TlHt/tblyoTUHvUJTGRMx6/viwTwo74VBVu7lb88",
+          "mode": "url"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblyoTUHvUJTGRMx6",
+          "mode": "list",
+          "cachedResultName": "n8n_messages_telegram_table",
+          "cachedResultUrl": "https://airtable.com/appXNUjvl2Lw3TlHt/tblyoTUHvUJTGRMx6"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Message ID": "={{ $json[\"Message ID\"] }}",
+            "Chat ID": "={{ $json[\"Chat ID\"] }}",
+            "Sender": "={{ $json.Sender }}",
+            "Message Text": "={{ $json[\"Message Text\"] }}",
+            "Timestamp": "={{ $json[\"Timestamp\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Message ID",
+              "displayName": "Message ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sender",
+              "displayName": "Sender",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Chat ID",
+              "displayName": "Chat ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Message Text",
+              "displayName": "Message Text",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        256
+      ],
+      "id": "1666ea28-b846-4b5d-872a-852778367f43",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "T7iXNcL4mSvaF5Gy",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af01d93f-e1e0-4297-868c-132192c167c8",
+              "name": "Message ID",
+              "value": "={{ String($json.message.message_id) }}",
+              "type": "string"
+            },
+            {
+              "id": "44379432-de18-4563-b160-e72585be8611",
+              "name": "Timestamp",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "c4376e95-63d9-4e46-b150-bc005f09d855",
+              "name": "Sender",
+              "value": "={{ $json.message.from.username || $json.message.from.first_name }}",
+              "type": "string"
+            },
+            {
+              "id": "56b40be6-b38e-4c1f-be77-695c512589d9",
+              "name": "Chat ID",
+              "value": "={{ String($json.message.chat.id) }}",
+              "type": "string"
+            },
+            {
+              "id": "18625afb-ab08-4d95-b8e8-903b0f3b7743",
+              "name": "Message Text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        256
+      ],
+      "id": "00196b95-aa71-4c28-9396-4aeb4512afc5",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "21742d19-488e-4a19-be20-b005bbc48631",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1395720bcb07616fc0d494bc95bd07d402b84bd330e729df44e16dd3917b0d8d"
+  },
+  "id": "lWXBlJuQV65moeea",
+  "tags": []
+}
